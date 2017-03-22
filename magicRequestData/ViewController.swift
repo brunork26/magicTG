@@ -35,7 +35,9 @@ struct RemoteCenter{
     func findCard(_ cardName:String){
         
         // Define server side script URL
-        let scriptUrl = "http://www.ligamagic.com.br/?view=cards%2Fsearch&card="
+        //https://www.ligamagic.com.br/?view=cards/card&card=
+        //"http://www.ligamagic.com.br/?view=cards%2Fsearch&card="
+        let scriptUrl = "https://www.ligamagic.com.br/?view=cards/card&card="
         var rewrite = ""
         let text = cardName.characters.split{$0 == " "}.map(String.init)
         for split in text {
@@ -189,7 +191,13 @@ class ViewController: UIViewController, DelegateProtocol, UITableViewDelegate, U
         let url = URL(string: test)
         let data = try? Data(contentsOf: url!)
         //self.imageView.image = UIImage(data: data!)
-        remote.findCard(textField.text!)
+        if textField.text == "" {
+            let alert = UIAlertController(title: "Alert", message: "Campo em branco!", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }  else {
+            remote.findCard(textField.text!)
+        }
         
     }
     
@@ -279,6 +287,19 @@ class ViewController: UIViewController, DelegateProtocol, UITableViewDelegate, U
         return cell
     }
 
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            vetName.remove(at: indexPath.row)
+            vetPreco.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+        }
+        
+        
+        
+    }
 }
 
 /* para segurança dos usuários
